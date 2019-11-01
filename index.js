@@ -5,8 +5,13 @@ var connectedNumber;
 var arrayColors = ["No-color"];
 var currentColor = random_rgba();
 var positionOriginalKey;
+var modeForSave;
+var easySave;
+var MedSave;
+var hardSave
 
 	function init(N_SIZE,mode) {
+        modeForSave = mode;
         var board = document.createElement('table');
         board.id = "board";
         board.setAttribute("border", 1);
@@ -131,7 +136,6 @@ var positionOriginalKey;
                 connectedNumber = this.innerText;
                 hoverWorks = true;
                 lastId = this.id;
-                console.log(lastId);
                 positionOriginalKey = this.id;
             }
         }
@@ -182,35 +186,131 @@ function isWin(){
             }
         }
         if(allColored){
-            alert("win!");
+            alert("You won " + modeForSave + " level");
+            modeForSave = undefined;         
         }
 }
 var buutonEasy = document.getElementById("Easy");
 var buttonMid = document.getElementById("Medium");
 var buttonHard = document.getElementById("Hard");
+var buttonNewGame = document.getElementById("NewGame");
 
 buutonEasy.addEventListener("click",onClickEasy);
 buttonMid.addEventListener("click",onClickMid);
 buttonHard.addEventListener("click",onClickHard);
+buttonNewGame.addEventListener("click",onClickNewGame);
 
 function onClickEasy() {
-    var tbl = document.getElementById("board");
-    if(tbl){
-         tbl.parentNode.removeChild(tbl);
+    if(modeForSave == undefined || modeForSave != "easy"){
+        if(modeForSave == "medium"){
+            MedSave = document.getElementById("board").innerHTML;
+        }else if(modeForSave == "hard"){
+            hardSave = document.getElementById("board").innerHTML;
+        }
+
+        if(document.getElementById("board")){
+            document.getElementById("board").parentNode.removeChild(document.getElementById("board"));
+        }
+        if(easySave == undefined){
+            init(5,"easy");
+        }else{
+            modeForSave = "easy";
+            var board = document.createElement('table');
+            board.id = "board";
+            board.setAttribute("border", 1);
+            board.setAttribute("cellspacing", 0);
+            board.innerHTML = easySave;
+            document.getElementById("king-sneeze").appendChild(board);
+            var table = document.getElementById("board");
+            for (let row of table.rows) 
+            {
+                for(let cell of row.cells) {
+                    cell.addEventListener("mousedown",onclick);
+                    cell.addEventListener("mouseover",onHover);
+                    cell.addEventListener("mouseup",onUp);
+                    cell.addEventListener("mousedown",onRightClick)
+                }
+            }
+        }
     }
-    init(5,"easy");
 }
 function onClickMid() {
-    var tbl = document.getElementById("board");
-    if(tbl){
-         tbl.parentNode.removeChild(tbl);
+    if(modeForSave == undefined || modeForSave != "medium"){
+        if(modeForSave == "easy"){
+            easySave = document.getElementById("board").innerHTML;
+        }else if(modeForSave == "hard"){
+            hardSave = document.getElementById("board").innerHTML;
+        }
+
+        if(document.getElementById("board")){
+            document.getElementById("board").parentNode.removeChild(document.getElementById("board"));
+        }
+        if(MedSave == undefined){
+            init(9,"medium");
+        }else{
+            modeForSave = "medium";
+            var board = document.createElement('table');
+            board.id = "board";
+            board.setAttribute("border", 1);
+            board.setAttribute("cellspacing", 0);
+            board.innerHTML = MedSave;
+            document.getElementById("king-sneeze").appendChild(board);
+            var table = document.getElementById("board");
+            for (let row of table.rows) 
+            {
+                for(let cell of row.cells) 
+                {
+                    cell.addEventListener("mousedown",onclick);
+                    cell.addEventListener("mouseover",onHover);
+                    cell.addEventListener("mouseup",onUp);
+                    cell.addEventListener("mousedown",onRightClick)
+                }
+            }
+        }
     }
-    init(9,"medium");
 }
 function onClickHard() {
-    var tbl = document.getElementById("board");
-    if(tbl){
-         tbl.parentNode.removeChild(tbl);
+    if(modeForSave == undefined || modeForSave != "hard"){
+        if(modeForSave == "easy"){
+            easySave = document.getElementById("board").innerHTML;
+        }else if(modeForSave == "medium"){
+            MedSave = document.getElementById("board").innerHTML;
+        }
+
+        if(document.getElementById("board")){
+            document.getElementById("board").parentNode.removeChild(document.getElementById("board"));
+        }
+        if(hardSave == undefined){
+            init(9,"hard");
+        }else{
+            modeForSave = "hard";
+            var board = document.createElement('table');
+            board.id = "board";
+            board.setAttribute("border", 1);
+            board.setAttribute("cellspacing", 0);
+            board.innerHTML = MedSave;
+            document.getElementById("king-sneeze").appendChild(board);
+            var table = document.getElementById("board");
+            for (let row of table.rows) 
+            {
+                for(let cell of row.cells) 
+                {
+                    cell.addEventListener("mousedown",onclick);
+                    cell.addEventListener("mouseover",onHover);
+                    cell.addEventListener("mouseup",onUp);
+                    cell.addEventListener("mousedown",onRightClick)
+                }
+            }
+        }
     }
-    init(9,"hard")
+}
+
+function onClickNewGame(){
+    modeForSave = undefined;
+    easySave = undefined;
+    MedSave = undefined;
+    hardSave = undefined;
+    if(document.getElementById("board")){
+        document.getElementById("board").parentNode.removeChild(document.getElementById("board"));
+    }
 }
