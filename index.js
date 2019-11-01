@@ -1,12 +1,12 @@
-var N_SIZE = 5;
+var N_SIZE;
 var hoverWorks = false;
 var lastId;
 var connectedNumber;
-var currentColor = random_rgba();
 var arrayColors = ["No-color"];
+var currentColor = random_rgba();
 var positionOriginalKey;
-        
-	function init() {
+
+	function init(N_SIZE,mode) {
         var board = document.createElement('table');
         board.id = "board";
         board.setAttribute("border", 1);
@@ -21,24 +21,63 @@ var positionOriginalKey;
                 cell.addEventListener("mouseup",onUp);
                 cell.addEventListener("mousedown",onRightClick)
                 cell.id = i + " " + j;
-                cell.setAttribute('height', 80);
-                cell.setAttribute('width', 80);
+                cell.setAttribute('height', 50);
+                cell.setAttribute('width', 50);
                 cell.setAttribute('align', 'center');
                 cell.setAttribute('valign', 'center');
                 cell.style.backgroundColor = "white";
 				row.appendChild(cell);
 			}
         }
-        
-
         document.getElementById("king-sneeze").appendChild(board);
-        document.getElementById("0 3").innerText = "2";
-        document.getElementById("1 1").innerText = "1";
-        document.getElementById("2 2").innerText = "2";
-        document.getElementById("3 0").innerText = "3";
-        document.getElementById("4 0").innerText = "1";
-        document.getElementById("3 3").innerText = "3";
-        
+        if(mode == "easy"){
+            document.getElementById("0 3").innerText = "2";
+            document.getElementById("1 1").innerText = "1";
+            document.getElementById("2 2").innerText = "2";
+            document.getElementById("3 0").innerText = "3";
+            document.getElementById("4 0").innerText = "1";
+            document.getElementById("3 3").innerText = "3";
+        }else if(mode == "medium"){
+            document.getElementById("0 0").innerText = "2";
+            document.getElementById("0 3").innerText = "9";
+            document.getElementById("0 7").innerText = "5";
+            document.getElementById("1 0").innerText = "1";
+            document.getElementById("1 3").innerText = "8";
+            document.getElementById("1 5").innerText = "11";
+            document.getElementById("1 8").innerText = "5";
+            document.getElementById("2 1").innerText = "2";
+            document.getElementById("2 4").innerText = "6";
+            document.getElementById("2 6").innerText = "7";
+            document.getElementById("3 5").innerText = "11";
+            document.getElementById("3 7").innerText = "10";
+            document.getElementById("4 3").innerText = "7";
+            document.getElementById("5 3").innerText = "4";
+            document.getElementById("6 7").innerText = "3";
+            document.getElementById("6 8").innerText = "6";
+            document.getElementById("7 1").innerText = "9";
+            document.getElementById("7 3").innerText = "4";
+            document.getElementById("7 4").innerText = "8";
+            document.getElementById("8 1").innerText = "1";
+            document.getElementById("8 7").innerText = "10";
+            document.getElementById("8 8").innerText = "3";
+        }else if(mode == "hard"){
+            document.getElementById("0 0").innerText = "1";
+            document.getElementById("0 4").innerText = "3";
+            document.getElementById("0 6").innerText = "5";
+            document.getElementById("0 8").innerText = "2";
+            document.getElementById("1 6").innerText = "8";
+            document.getElementById("1 7").innerText = "5";
+            document.getElementById("2 0").innerText = "7";
+            document.getElementById("2 1").innerText = "4";
+            document.getElementById("2 3").innerText = "6";
+            document.getElementById("3 6").innerText = "1";
+            document.getElementById("4 8").innerText = "2";
+            document.getElementById("5 2").innerText = "4";
+            document.getElementById("7 1").innerText = "7";
+            document.getElementById("7 6").innerText = "3";
+            document.getElementById("8 3").innerText = "6";
+            document.getElementById("8 8").innerText = "8";
+        }
     }  
     
     function onUp(){
@@ -46,17 +85,12 @@ var positionOriginalKey;
             arrayColors += currentColor;
             positionOriginalKey = "";
         }else{
-       // if(!(this.innerText == connectedNumber) || (this.innerText == connectedNumber) && positionOriginalKey == this.id || this.innerText == connectedNumber &){
             var table = document.getElementById("board");
             for (let row of table.rows) 
             {
                 for(let cell of row.cells) 
                 {
-                    //console.log(currentColor);
-                    //console.log(cell.style.backgroundColor);
-                    //console.log(cell.id);
                    if(!(arrayColors.includes(cell.style.backgroundColor))){
-                        console.log(arrayColors.includes(cell.style.backgroundColor));
                         cell.style.backgroundColor = "white";
                    }
                 }
@@ -104,8 +138,11 @@ var positionOriginalKey;
     }
 
     function random_rgba() {
+        do{
         var o = Math.round, r = Math.random, s = 255;
-        return 'rgba(' + o(r()*s) + ', ' + o(r()*s) + ', ' + o(r()*s) + ', ' + r().toFixed(1) + ')';
+        var color = 'rgba(' + o(r()*s) + ', ' + o(r()*s) + ', ' + o(r()*s) + ', ' + r().toFixed(1) + ')';
+        }while(arrayColors.includes(color))
+        return color;
     }
       
 
@@ -148,4 +185,32 @@ function isWin(){
             alert("win!");
         }
 }
-init();
+var buutonEasy = document.getElementById("Easy");
+var buttonMid = document.getElementById("Medium");
+var buttonHard = document.getElementById("Hard");
+
+buutonEasy.addEventListener("click",onClickEasy);
+buttonMid.addEventListener("click",onClickMid);
+buttonHard.addEventListener("click",onClickHard);
+
+function onClickEasy() {
+    var tbl = document.getElementById("board");
+    if(tbl){
+         tbl.parentNode.removeChild(tbl);
+    }
+    init(5,"easy");
+}
+function onClickMid() {
+    var tbl = document.getElementById("board");
+    if(tbl){
+         tbl.parentNode.removeChild(tbl);
+    }
+    init(9,"medium");
+}
+function onClickHard() {
+    var tbl = document.getElementById("board");
+    if(tbl){
+         tbl.parentNode.removeChild(tbl);
+    }
+    init(9,"hard")
+}
