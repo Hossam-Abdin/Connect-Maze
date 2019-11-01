@@ -183,17 +183,17 @@ function isWin() {
                 allColored = false;
                 break;
             }
-            if (!allColored) {
-                break;
-            }
-
+        }
+        if (!allColored) {
+            break;
         }
     }
+
     if (allColored) {
         alert("You won " + modeForSave + " level");
-        modeForSave = undefined;
     }
 }
+
 var buutonEasy = document.getElementById("Easy");
 var buttonMid = document.getElementById("Medium");
 var buttonHard = document.getElementById("Hard");
