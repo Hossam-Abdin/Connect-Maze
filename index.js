@@ -3,6 +3,8 @@ var hoverWorks = false;
 var lastId;
 var connectedNumber;
 var currentColor = random_rgba();
+var arrayColors = ["No-color"];
+var positionOriginalKey;
         
 	function init() {
         var board = document.createElement('table');
@@ -17,11 +19,13 @@ var currentColor = random_rgba();
                 cell.addEventListener("mousedown",onclick);
                 cell.addEventListener("mouseover",onHover);
                 cell.addEventListener("mouseup",onUp);
+                cell.addEventListener("mousedown",onRightClick)
                 cell.id = i + " " + j;
                 cell.setAttribute('height', 80);
                 cell.setAttribute('width', 80);
                 cell.setAttribute('align', 'center');
                 cell.setAttribute('valign', 'center');
+                cell.style.backgroundColor = "white";
 				row.appendChild(cell);
 			}
         }
@@ -34,21 +38,26 @@ var currentColor = random_rgba();
         document.getElementById("3 0").innerText = "3";
         document.getElementById("4 0").innerText = "1";
         document.getElementById("3 3").innerText = "3";
-
-    }
+        
+    }  
     
     function onUp(){
-        if(!(this.innerText == connectedNumber)){
+        if((this.innerText == connectedNumber) && positionOriginalKey != this.id && this.style.backgroundColor != "white"){
+            arrayColors += currentColor;
+            positionOriginalKey = "";
+        }else{
+       // if(!(this.innerText == connectedNumber) || (this.innerText == connectedNumber) && positionOriginalKey == this.id || this.innerText == connectedNumber &){
             var table = document.getElementById("board");
             for (let row of table.rows) 
             {
                 for(let cell of row.cells) 
                 {
-                    console.log(currentColor);
-                    console.log(cell.style.backgroundColor);
-                    console.log(cell.id);
-                   if(cell.style.backgroundColor == currentColor){
-                       cell.style.backgroundColor = "white";
+                    //console.log(currentColor);
+                    //console.log(cell.style.backgroundColor);
+                    //console.log(cell.id);
+                   if(!(arrayColors.includes(cell.style.backgroundColor))){
+                        console.log(arrayColors.includes(cell.style.backgroundColor));
+                        cell.style.backgroundColor = "white";
                    }
                 }
             }
@@ -58,25 +67,39 @@ var currentColor = random_rgba();
         lastId = undefined;
         hoverWorks = false;
         currentColor = random_rgba();
+        isWin()
     }
     
     function onHover(){
-        var isMoveVer = Math.abs(Number(this.id[0]) - Number(lastId[0])) == 1 && this.id[2] == lastId[2];
-        var isMoveHor = Math.abs(Number(this.id[2]) - Number(lastId[2])) && this.id[0] == lastId[0];
+        var isMoveHor = Math.abs(Number(this.id[0]) - Number(lastId[0])) == 1 && this.id[2] == lastId[2];
+        var isMoveVer = Math.abs(Number(this.id[2]) - Number(lastId[2])) == 1 && this.id[0] == lastId[0];
+        var oneThingAtATime = true;
         if(hoverWorks){
-            if( (isMoveVer || isMoveHor) && (this.innerText == "" || (this.innerText == connectedNumber)) && this.style.backgroundColor != "green"){                
+            if( (isMoveVer || isMoveHor) && (this.innerText == "" || (this.innerText == connectedNumber)) && this.style.backgroundColor == "white"){
                 this.style.backgroundColor = currentColor;
                 lastId = this.id;
+                oneThingAtATime = false
             }
+            
+            if(oneThingAtATime && (isMoveVer || isMoveHor) && (this.innerText == "" || (this.innerText == connectedNumber)) && document.getElementById(lastId).style.backgroundColor != "white" && this.style.backgroundColor != "white"){
+                document.getElementById(lastId).style.backgroundColor = "white";
+                lastId = this.id;
+                console.log("HI")
+            }
+            
         }
     }
 
-    function onclick() {
-        if(!(this.innerText == "")){
-            this.style.backgroundColor = currentColor;
-            connectedNumber = this.innerText;
-            hoverWorks = true;
-            lastId = this.id;
+    function onclick(event) {
+        if(event.button == 0){
+            if(!(this.innerText == "") && this.style.backgroundColor == "white"){
+                this.style.backgroundColor = currentColor;
+                connectedNumber = this.innerText;
+                hoverWorks = true;
+                lastId = this.id;
+                console.log(lastId);
+                positionOriginalKey = this.id;
+            }
         }
     }
 
@@ -85,4 +108,44 @@ var currentColor = random_rgba();
         return 'rgba(' + o(r()*s) + ', ' + o(r()*s) + ', ' + o(r()*s) + ', ' + r().toFixed(1) + ')';
     }
       
+
+    function onRightClick(event){
+        colorDel = this.style.backgroundColor;
+        if(event.button == 2){
+            var table = document.getElementById("board");
+            for (let row of table.rows) 
+            {
+                for(let cell of row.cells) 
+                {
+                    if(cell.style.backgroundColor == colorDel){
+                        cell.style.backgroundColor = "white";
+                    }
+                }
+            }
+        }
+    }
+
+function isWin(){
+        var table = document.getElementById("board");
+        var allColored = true;
+        for (let row of table.rows) 
+        {
+            for(let cell of row.cells) 
+            {
+                if(cell.style.backgroundColor != "white"){
+                    allColored = true;
+                }else{
+                    allColored = false;
+                    break;
+                }
+                if(!allColored){
+                    break;
+                }
+                
+            }
+        }
+        if(allColored){
+            alert("win!");
+        }
+}
 init();
