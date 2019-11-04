@@ -123,10 +123,9 @@ function onHover() {
             oneThingAtATime = false
         }
 
-        if (oneThingAtATime && (isMoveVer || isMoveHor) && (this.innerText == "" || (this.innerText == connectedNumber)) && document.getElementById(lastId).style.backgroundColor != "white" && this.style.backgroundColor != "white") {
+        if (oneThingAtATime && (isMoveVer || isMoveHor) && (this.innerText == "" || (this.innerText == connectedNumber)) && document.getElementById(lastId).style.backgroundColor != "white" && this.style.backgroundColor != "white" && this.style.backgroundColor == document.getElementById(lastId).style.backgroundColor) {
             document.getElementById(lastId).style.backgroundColor = "white";
             lastId = this.id;
-            console.log("HI")
         }
 
     }
